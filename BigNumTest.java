@@ -34,13 +34,13 @@ public class BigNumTest {
 	}
 
 	public static BigNum factorialBig(BigNum x) {
-		// TODO Factorial of the Number
-		BigNum num1 = new BigNum(1);
-		if (!(x.great(num1))) return num1;
+		// Factorial of the Number method
+		BigNum num0 = new BigNum(1);
+		if (!(x.greater(num0))) return num0;
 		else {
-			num1.copy(x);
-			num1.sub(new BigNum(1));
-			x.mul(factorialBig(num1));
+			num0.copy(x);
+			num0.sub(new BigNum(1));
+			x.mul(factorialBig(num0));
 			return x;
 		}
 	}

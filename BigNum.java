@@ -41,36 +41,36 @@ public class BigNum {
 	// Arithmetic operations
 	void add(BigNum x) {
 		// Addition method
-		int ost = 0;
+		int overflow = 0;
 		int i = lenNum - 1;
 		for (; i>= 0; i--) {
-			num[i] += x.num[i] + ost;
-			ost = num[i] / base;
+			num[i] += x.num[i] + overflow;
+			overflow = num[i] / base;
 			num[i] %= base;
 		}
 	}
 
 	void sub(BigNum x) {
 		// Subtraction method
-		int ost = 0;
+		int underflow = 0;
 		for (int i = lenNum - 1; i >= 0; i--) {
-			num[i] = (byte) (num[i] - x.num[i] + ost);
+			num[i] = (byte) (num[i] - x.num[i] + underflow);
 			if (num[i] < 0) 
 			{
-				ost = -1;
+				underflow = -1;
 				num[i] += base;
 			}
 			else
-				ost=0;
+				underflow = 0;
 		}
 	}
 
 	void mul(BigNum x) {
 		// Multiplication method
-		BigNum rez = new BigNum();
+		BigNum rslt = new BigNum(); // Result
 		int i, j = lenNum - 1;
 		int lim_j = 0, lim_i = 0;
-		int y; int ost;
+		int h; int overflow;
 		while (x.num[j] <= 0) //Zeroes to skip in the number to multiply by
 			j--;
 		while (x.num[lim_j] == 0) // Beginning of the number to multiply by
@@ -79,37 +79,37 @@ public class BigNum {
 			lim_i++;
 		// From after zeroes to the beginning of the number to multiply by
 		for (; j >= lim_j; j--) {
-			y = j; ost = 0;
-			BigNum mas = new BigNum();
+			h = j; overflow = 0;
+			BigNum subRslt = new BigNum();
 			// From the end of the internal number to its beginning
 			for (i= lenNum - 1; i >= lim_i; i--) {
-				mas.num[y] = (byte) (num[i] * x.num[j] + ost);// Multiply elements of the numbers
-				ost = mas.num[y] / base;// If ost is more than base then shift it into the base
-				mas.num[y] %= base;
-				y--;
+				subRslt.num[h] = (byte) (num[i] * x.num[j] + overflow);// Multiply elements of the numbers
+				overflow = subRslt.num[h] / base;// If ost is more than base then shift it into the base
+				subRslt.num[h] %= base;
+				h--;
 			}
 			// Add ost to the next element (if it does exist)
-			while (ost > 0) {
-				mas.num[y] = (byte) (ost % base);
-				ost/=base;
-				y--;
+			while (overflow > 0) {
+				subRslt.num[h] = (byte) (overflow % base);
+				overflow /= base;
+				h--;
 			}
-			rez.add(mas);
+			rslt.add(subRslt);
 		}
-		this.copy(rez);
+		this.copy(rslt);
 	}
 
 	void div(BigNum x) {
 		// Modular division
-		BigNum rez = new BigNum(); // Result
+		BigNum rslt = new BigNum(); // Result
 		BigNum one = new BigNum(1); //
-		while (this.great(x)) // Until fist number is lesser than the second
+		while (this.greater(x)) // Until fist number is lesser than the second
 		{
 			this.sub(x); // Subtract
-			rez.add(one); // Add to the Result
+			rslt.add(one); // Add to the Result
 		}
 		x.copy(this);
-		this.copy(rez); // Copy to the internal number
+		this.copy(rslt); // Copy to the internal number
 	}
 
 	// Additional arithmetic
@@ -144,7 +144,7 @@ public class BigNum {
 			num[i] = x.num[i];
 	}
 
-	Boolean great(BigNum x) {
+	Boolean greater(BigNum x) {
 		// Comparison method
 		int i = 0;
 		while (i < lenNum && num[i] == x.num[i])
